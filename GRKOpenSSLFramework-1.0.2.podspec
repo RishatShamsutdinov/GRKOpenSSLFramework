@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
-  s.name         = "GRKOpenSSLFramework-1.0.3"
+  s.name         = "GRKOpenSSLFramework-1.0.2"
   s.module_name  = "openssl"
-  s.version      = "1.0.2.#{("a".."z").to_a.index 'k'}.1"
+  s.version      = "1.0.2.#{("a".."z").to_a.index 'k'}.3"
   s.summary      = "OpenSSL for iOS and OS X"
   s.description  = "OpenSSL Framework binaries."
   s.homepage     = "https://github.com/levigroker/OpenSSL/"
