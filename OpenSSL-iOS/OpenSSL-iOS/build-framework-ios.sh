@@ -34,16 +34,22 @@ fi
 
 if [[ "$SF_SDK_PLATFORM" != "iphoneos" ]]
 then
-echo "Please choose iPhone device as the build target."
+echo "Please choose iPhone device as the build target instead of $SF_SDK_PLATFORM."
 exit 1
 fi
 
 IPHONE_DEVICE_BUILD_DIR=${BUILD_DIR}/${CONFIGURATION}-iphoneos
 
-# Build the other (non-simulator) platform
-xcodebuild -project "${PROJECT_FILE_PATH}" -target "${TARGET_NAME}" -configuration "${CONFIGURATION}" -sdk iphoneos BUILD_DIR="${BUILD_DIR}" OBJROOT="${OBJROOT}" BUILD_ROOT="${BUILD_ROOT}" CONFIGURATION_BUILD_DIR="${IPHONE_DEVICE_BUILD_DIR}/arm64" SYMROOT="${SYMROOT}" ARCHS='arm64' VALID_ARCHS='arm64' $ACTION
+function build() {
+    xcodebuild -project "${PROJECT_FILE_PATH}" -target "${TARGET_NAME}" -configuration "${CONFIGURATION}" -sdk $1 BUILD_DIR="${BUILD_DIR}" OBJROOT="${OBJROOT}" BUILD_ROOT="${BUILD_ROOT}"  CONFIGURATION_BUILD_DIR="${IPHONE_DEVICE_BUILD_DIR}/$2" SYMROOT="${SYMROOT}" ARCHS="$3" VALID_ARCHS="$3" $ACTION
+}
 
-xcodebuild -project "${PROJECT_FILE_PATH}" -target "${TARGET_NAME}" -configuration "${CONFIGURATION}" -sdk iphoneos BUILD_DIR="${BUILD_DIR}" OBJROOT="${OBJROOT}" BUILD_ROOT="${BUILD_ROOT}"  CONFIGURATION_BUILD_DIR="${IPHONE_DEVICE_BUILD_DIR}/armv7" SYMROOT="${SYMROOT}" ARCHS='armv7 armv7s' VALID_ARCHS='armv7 armv7s' $ACTION
+# Build the other (non-simulator) platform
+build 'iphoneos' 'arm64' 'arm64'
+build 'iphoneos' 'armv7' 'armv7 armv7s'
+
+# Build simulator platform
+build 'iphonesimulator' 'i386' 'i386'
 
 # Copy the framework structure to the universal folder (clean it first)
 rm -rf "${UNIVERSAL_OUTPUTFOLDER}"
